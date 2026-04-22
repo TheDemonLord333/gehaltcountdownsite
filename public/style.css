@@ -1,0 +1,159 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:      #0d0d1a;
+  --card:    #16162a;
+  --border:  #2a2a45;
+  --accent:  #f5a623;
+  --accent2: #ff6b6b;
+  --text:    #e0e0f0;
+  --muted:   #7070a0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.6rem 1.8rem;
+}
+
+.card-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+/* ── Next payday ── */
+.payday-date {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.payday-note {
+  margin-top: 0.4rem;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.payday-note.today {
+  color: #4cde80;
+  font-weight: 600;
+}
+
+/* ── Countdown ── */
+.countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.unit {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem 1.1rem;
+  min-width: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.value {
+  font-size: 3rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.unit-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.colon {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--muted);
+  padding-bottom: 1.4rem;
+  line-height: 1;
+}
+
+/* ── Upcoming list ── */
+.payday-list {
+  list-style: none;
+  margin-top: 0.4rem;
+}
+
+.payday-list li {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.payday-list li:last-child {
+  border-bottom: none;
+}
+
+.payday-list li.next {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.4rem;
+  }
+  .value {
+    font-size: 2.1rem;
+  }
+  .unit {
+    min-width: 70px;
+    padding: 1rem 0.8rem;
+  }
+  .payday-date {
+    font-size: 1.2rem;
+  }
+}
