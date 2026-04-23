@@ -4,7 +4,7 @@ const http = require('http');
 const fs   = require('fs');
 const path = require('path');
 
-const PORT       = parseInt(process.env.PORT || '3000', 10);
+const PORT       = parseInt(process.env.PORT || '3002', 10);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 // ── German national public holidays ──────────────────────────────────────────
