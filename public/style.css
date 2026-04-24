@@ -5,13 +5,12 @@
 }
 
 :root {
-  --bg:      #0d0d1a;
-  --card:    #16162a;
-  --border:  #2a2a45;
-  --accent:  #f5a623;
-  --accent2: #ff6b6b;
-  --text:    #e0e0f0;
-  --muted:   #7070a0;
+  --bg:     #0d0d1a;
+  --card:   #16162a;
+  --border: #2a2a45;
+  --accent: #f5a623;
+  --text:   #e0e0f0;
+  --muted:  #7070a0;
 }
 
 body {
@@ -75,13 +74,12 @@ h1 {
   font-weight: 600;
 }
 
-/* ── Countdown ── */
+/* ── Countdown – Desktop (flex row mit Doppelpunkten) ── */
 .countdown {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  flex-wrap: wrap;
 }
 
 .unit {
@@ -117,6 +115,8 @@ h1 {
   color: var(--muted);
   padding-bottom: 1.4rem;
   line-height: 1;
+  /* Doppelpunkte immer sichtbar auf Desktop */
+  display: block;
 }
 
 /* ── Upcoming list ── */
@@ -141,19 +141,84 @@ h1 {
   font-weight: 700;
 }
 
-/* ── Responsive ── */
-@media (max-width: 480px) {
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+  body {
+    align-items: flex-start;
+    padding: 1.2rem 1rem;
+  }
+
   h1 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
-  .value {
-    font-size: 2.1rem;
+
+  .card {
+    padding: 1.2rem 1.2rem;
   }
-  .unit {
-    min-width: 70px;
-    padding: 1rem 0.8rem;
-  }
+
   .payday-date {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+  }
+
+  .value {
+    font-size: 2.4rem;
+  }
+
+  .unit {
+    min-width: 78px;
+    padding: 1.1rem 0.9rem;
+  }
+
+  .colon {
+    font-size: 2rem;
+    padding-bottom: 1.1rem;
+  }
+}
+
+/* ── Smartphone (≤ 520px): 2×2 Grid, keine Doppelpunkte ── */
+@media (max-width: 520px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .card {
+    padding: 1rem 1rem;
+    border-radius: 12px;
+  }
+
+  .payday-date {
+    font-size: 1.15rem;
+  }
+
+  /* Countdown als 2×2 Grid */
+  .countdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+
+  /* Doppelpunkte ausblenden auf Mobil */
+  .colon {
+    display: none;
+  }
+
+  .unit {
+    min-width: unset;
+    width: 100%;
+    padding: 1.1rem 0.5rem;
+    border-radius: 12px;
+  }
+
+  .value {
+    font-size: 2.6rem;
+  }
+
+  .unit-label {
+    font-size: 0.65rem;
+  }
+
+  .payday-list li {
+    font-size: 0.9rem;
+    padding: 0.7rem 0;
   }
 }
