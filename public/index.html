@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nächstes Gehalt</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Nächstes Gehalt</h1>
+
+    <div class="card payday-card">
+      <p class="card-label">Nächster Zahltag</p>
+      <p class="payday-date" id="paydayDate">Lade&hellip;</p>
+      <p class="payday-note" id="paydayNote"></p>
+    </div>
+
+    <div class="countdown" id="countdown">
+      <div class="unit">
+        <span class="value" id="cntDays">--</span>
+        <span class="unit-label">Tage</span>
+      </div>
+      <div class="colon">:</div>
+      <div class="unit">
+        <span class="value" id="cntHours">--</span>
+        <span class="unit-label">Stunden</span>
+      </div>
+      <div class="colon">:</div>
+      <div class="unit">
+        <span class="value" id="cntMinutes">--</span>
+        <span class="unit-label">Minuten</span>
+      </div>
+      <div class="colon">:</div>
+      <div class="unit">
+        <span class="value" id="cntSeconds">--</span>
+        <span class="unit-label">Sekunden</span>
+      </div>
+    </div>
+
+    <div class="card upcoming-card">
+      <p class="card-label">Kommende Zahltage (7. Werktag)</p>
+      <ul id="paydayList" class="payday-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    const DE_MONTHS = [
+      'Januar','Februar','März','April','Mai','Juni',
+      'Juli','August','September','Oktober','November','Dezember'
+    ];
+    const DE_DAYS = [
+      'Sonntag','Montag','Dienstag','Mittwoch',
+      'Donnerstag','Freitag','Samstag'
+    ];
+
+    function formatDate(iso) {
+      const [y, m, d] = iso.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      return `${DE_DAYS[dt.getDay()]}, ${d}. ${DE_MONTHS[m - 1]} ${y}`;
+    }
+
+    function isToday(iso) {
+      const today = new Date();
+      const [y, m, d] = iso.split('-').map(Number);
+      return today.getFullYear() === y &&
+             today.getMonth() + 1 === m &&
+             today.getDate()       === d;
+    }
+
+    let nextPayday = null;
+
+    async function loadPaydays() {
+      try {
+        const res  = await fetch('/api/payday');
+        const data = await res.json();
+
+        if (!data.paydays || !data.paydays.length) return;
+
+        nextPayday = data.paydays[0];
+        document.getElementById('paydayDate').textContent = formatDate(nextPayday);
+
+        const note = document.getElementById('paydayNote');
+        if (isToday(nextPayday)) {
+          note.textContent = '🎉 Heute ist Zahltag!';
+          note.className   = 'payday-note today';
+        } else {
+          note.textContent = '';
+          note.className   = 'payday-note';
+        }
+
+        const list = document.getElementById('paydayList');
+        list.innerHTML = '';
+        data.paydays.forEach((iso, i) => {
+          const li = document.createElement('li');
+          li.textContent = formatDate(iso);
+          if (i === 0) li.classList.add('next');
+          list.appendChild(li);
+        });
+      } catch {
+        document.getElementById('paydayDate').textContent = 'Fehler beim Laden';
+      }
+    }
+
+    function tick() {
+      if (!nextPayday) return;
+
+      const [y, m, d] = nextPayday.split('-').map(Number);
+      const target    = new Date(y, m - 1, d, 0, 0, 0, 0);
+      const diff      = target - Date.now();
+
+      if (diff <= 0) {
+        ['cntDays','cntHours','cntMinutes','cntSeconds'].forEach(id => {
+          document.getElementById(id).textContent = '0';
+        });
+        loadPaydays();
+        return;
+      }
+
+      const days    = Math.floor(diff / 86_400_000);
+      const hours   = Math.floor((diff % 86_400_000) / 3_600_000);
+      const minutes = Math.floor((diff % 3_600_000)  /    60_000);
+      const seconds = Math.floor((diff %    60_000)  /     1_000);
+
+      document.getElementById('cntDays').textContent    = days;
+      document.getElementById('cntHours').textContent   = String(hours).padStart(2, '0');
+      document.getElementById('cntMinutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('cntSeconds').textContent = String(seconds).padStart(2, '0');
+    }
+
+    loadPaydays();
+    setInterval(tick, 1000);
+    setInterval(loadPaydays, 3_600_000); // refresh list every hour
+  </script>
+</body>
+</html>
