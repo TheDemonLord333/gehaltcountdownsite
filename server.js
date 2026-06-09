@@ -139,8 +139,17 @@ const server = http.createServer((req, res) => {
 
   if (req.url === '/api/payday' || req.url.startsWith('/api/payday?')) {
     const paydays = nextPaydays(7);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ paydays }));
+    const body = JSON.stringify({
+      next_payday:  paydays[0] ?? null,   // nächster Zahltag direkt abrufbar
+      paydays,                             // alle 7 kommenden Zahltage
+      generated_at: new Date().toISOString(),
+    }, null, 2);
+    res.writeHead(200, {
+      'Content-Type':                'application/json',
+      'Access-Control-Allow-Origin': '*',  // Zugriff von Apps & anderen Domains
+      'Cache-Control':               'no-cache',
+    });
+    return res.end(body);
   }
 
   serveStatic(req, res);
