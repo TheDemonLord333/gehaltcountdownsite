@@ -55,6 +55,7 @@ function germanHolidays(year) {
     shiftDays(easter,  1),   // Ostermontag
     shiftDays(easter, 39),   // Christi Himmelfahrt
     shiftDays(easter, 50),   // Pfingstmontag
+    shiftDays(easter, 60),   // Fronleichnam (BW, BY, HE, NW, RP, SL u.a.)
   ];
   return new Set([...fixed, ...movable].map(dateKey));
 }
